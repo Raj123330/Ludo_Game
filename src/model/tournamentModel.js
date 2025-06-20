@@ -12,7 +12,7 @@ const Tournament = sequelize.define("Tournament", {
   entryFee: { type: DataTypes.FLOAT, allowNull: false },
   prizePool: { type: DataTypes.FLOAT, defaultValue: 0.0 },
   status: {
-    type: DataTypes.ENUM("upcoming", "ongoing", "completed"),
+    type: DataTypes.ENUM("upcoming", "ongoing", "active"),
     defaultValue: "upcoming",
   },
   maxPlayers: {
