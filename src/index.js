@@ -54,22 +54,22 @@ app.use(
 );
 //sequelize.authenticate();
 //user touter
-app.use("/user", userRouter);
+app.use("/api/v1/user", userRouter);
 //notification router
-app.use("/notification", notificationRouter);
+app.use("/api/v1/notification", notificationRouter);
 //game router
-app.use("/game", gameRouter);
+app.use("/api/v1/game", gameRouter);
 //room router
-app.use("/room", roomRouter);
+app.use("/api/v1/room", roomRouter);
 //tournament router
-app.use("/tournament", tournamentRouter);
+app.use("/api/v1/tournament", tournamentRouter);
 //refer router
-app.use("/refer", referSettingRouter);
+app.use("/api/v1/refer", referSettingRouter);
 //app.use("/payment", paymentRouter);
 //transaction router
-app.use("/wallet", walletRouter);
+app.use("/api/v1/wallet", walletRouter);
 // Global error handling middleware
-app.use("/admin", adminRouter);
+app.use("/api/v1/admin", adminRouter);
 app.use((err, req, res, next) => {
   console.error("Server Error:", err);
   res.status(500).json({ message: "Server error", error: err.message });
