@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../model/userModel.js";
 import { uploadOnCloudinary } from "../../src/util/cloudinary.js";
+import { client, twilioPhone } from "../util/twilio.js";
 //import { generateAndSaveOtp } from "../util/genrateAndsend.js";
 // Temporary token blacklist storage (use Redis in production)
 let tokenBlacklist = new Set();
@@ -154,7 +155,7 @@ const submitKYC = async (req, res) => {
   }
 };
 // Add the missing generateAndSaveOtp function
-const generateAndSaveOtp = async (mobile) => {
+/*const generateAndSaveOtp = async (mobile) => {
   try {
     const user = await User.findOne({ where: { mobile } });
 
@@ -174,7 +175,7 @@ const generateAndSaveOtp = async (mobile) => {
   } catch (error) {
     throw error;
   }
-};
+};*/
 const verifyOtp = async (req, res) => {
   try {
     const { mobile, otp } = req.body;
@@ -245,6 +246,35 @@ const verifyOtp = async (req, res) => {
     res
       .status(500)
       .json({ message: "OTP verification failed", error: error.message });
+  }
+};
+const generateAndSaveOtp = async (mobile) => {
+  try {
+    const user = await User.findOne({ where: { mobile } });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP and expiry
+    user.otp = otp;
+    user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    await user.save();
+
+    // ✅ Send OTP via Twilio
+    await client.messages.create({
+      body: `Your OTP is ${otp}`,
+      from: twilioPhone,
+      to: mobile.startsWith("+") ? mobile : `+91${mobile}`, // or +1... depending on your region
+    });
+
+    return { otp };
+  } catch (error) {
+    console.error("Error generating/sending OTP:", error.message);
+    throw error;
   }
 };
 // RESEND OTP
