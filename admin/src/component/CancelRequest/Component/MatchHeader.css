@@ -1,0 +1,159 @@
+.match-header-container {
+    width: 95%;
+    border-radius: 10px;
+    padding: 20px;
+    background: #f2f4f8;
+  }
+  
+  .match-header-gradient {
+    max-width: 1000px;
+    margin: auto;
+    background: linear-gradient(90deg, #ff758c, #ff7eb3, #b388ff);
+    padding: 4px;
+    border-radius: 20px;
+  }
+  
+  .match-header-content {
+    background: linear-gradient(180deg, #ffe6f0 0%, #ffffff 80%);
+    padding: 30px 20px;
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .match-id {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+  }
+  
+  .match-date {
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+  }
+  
+  .players-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 30px;
+  }
+  
+  .player-card {
+    background: linear-gradient(90deg, #ffcc70, #ff7b7b);
+    border-radius: 10px;
+    padding: 15px;
+    width: 40%;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .player-avatar {
+    width: 50px;
+    height: 50px;
+    background: #ccc;
+    border-radius: 50%;
+    margin-bottom: 5px;
+  }
+  
+  .player-details {
+    text-align: center;
+  }
+  
+  .player-name {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .player-phone {
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .submitted-result {
+    margin-top: 5px;
+  }
+  
+  .result-badge {
+    background-color: #1a1a2e;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+  
+  .vs-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #fff;
+  }
+  
+  .tags-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .tag {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    display: inline-block;
+  }
+  
+  .tag-cancelled {
+    background-color: #f44336;
+  }
+  
+  .tag-room {
+    background: linear-gradient(90deg, #ff00cc, #3333ff);
+  }
+  
+  .tag-bet,
+  .tag-prize {
+    background: #1a1a2e;
+  }
+  
+  .tag-game {
+    background: linear-gradient(90deg, #ffcc70, #ff7b7b);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .players-wrapper {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .vs-circle {
+      position: static;
+      transform: none;
+      margin: 20px 0;
+    }
+  
+    .player-card {
+      width: 80%;
+    }
+  }
+  

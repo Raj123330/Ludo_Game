@@ -1,0 +1,29 @@
+.status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    margin-top: 1px;
+    background-color: #2f4366;
+  }
+  
+  .status-box {
+    background-color: #e6e8ec;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #22334f;
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-box .label {
+    text-transform: uppercase;
+  }
+  
+  .status-box:hover {
+    background-color: #7ed321;
+    color: white;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,97 @@
+.conflict-container {
+    padding: 20px;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .search-bar button {
+    padding: 10px 20px;
+    background-color: #d100b0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .table-wrapper {
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 16px;
+    padding: 10px;
+    overflow-x: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  th,
+  td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .subtext {
+    color: #888;
+    font-size: 0.85rem;
+  }
+  
+  .winner {
+    color: #00b300;
+    font-weight: bold;
+  }
+  
+  .looser {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .screenshot {
+    background-color: #00cc44;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    display: inline-block;
+  }
+  
+  .resolved-btn {
+    background-color: #1a1a40;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: default;
+  }
+  
+  .open-match {
+    color: #1a1a40;
+    margin-top: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .no-result {
+    text-align: center;
+    color: gray;
+    padding: 20px;
+  }
+  

@@ -1,0 +1,39 @@
+.user-info {
+    position: relative;
+    cursor: pointer;
+    padding: 5px 8px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+  }
+  
+  .user-info:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .logout-popup {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 100;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .logout-btn {
+    color: rgb(89, 89, 89);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  

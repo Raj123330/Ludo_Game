@@ -1,0 +1,27 @@
+/* App.css */
+
+/* Layout of the sidebar and dashboard */
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: 300px; /* or any fixed reasonable width */
+  flex-shrink: 0;
+  background-color: #f3f4f6;
+  box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dashboard Styling */
+.dashboard {
+  flex: 1; /* Takes up the remaining space */
+  padding: 20px;
+}
+.main-content{
+  width:100%;
+  margin-right:10px;
+  background-color:rgb(226, 229, 228);
+}

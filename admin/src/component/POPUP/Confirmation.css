@@ -1,0 +1,92 @@
+/* Confirmation Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup Card */
+.popup-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Popup Header */
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-icon {
+  color: #f59e0b;
+  margin-bottom: 1rem;
+}
+
+.popup-message {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Popup Actions */
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cancel-button,
+.confirm-button {
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  width: 48%;
+}
+
+.cancel-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.confirm-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.cancel-button:hover {
+  background-color: #dc2626;
+}
+
+.confirm-button:hover {
+  background-color: #388e3c;
+}
+
+/* Popup Fade-in Animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

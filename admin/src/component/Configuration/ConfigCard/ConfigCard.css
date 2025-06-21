@@ -1,0 +1,61 @@
+.config-card {
+    background-color: white;
+    max-width: 800px;
+    border-radius: 1rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    margin-left: 10%;
+    margin-top: 5%;
+  }
+  
+  .config-title {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #be0d87;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .config-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    display: block;
+    color: #374151;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    outline: none;
+  }
+  
+  .submit-btn {
+    background: linear-gradient(to right, #ec008c, #7f00ff);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  
+  .submit-btn:hover {
+    opacity: 0.9;
+  }
+  

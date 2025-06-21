@@ -1,0 +1,150 @@
+.match-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  .match-header {
+    display: flex;
+    flex-wrap: wrap;
+    background: linear-gradient(to right, #ff5f6d, #ffc371);
+    padding: 20px;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .player-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    background: #ddd;
+    border-radius: 50%;
+  }
+  
+  .player-info h4 {
+    margin: 10px 0 5px 0;
+  }
+  
+  .result-badge {
+    background: #222;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 8px;
+  }
+  
+  .match-details {
+    flex: 1;
+    text-align: center;
+    color: white;
+  }
+  
+  .vs-circle {
+    margin: 10px auto;
+    background: #111;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .extra-info {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .badge {
+    background: #333;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  
+  .badge.cancelled {
+    background: #e74c3c;
+  }
+  
+  .badge.room {
+    background: #9b59b6;
+  }
+  
+  .badge.bet,
+  .badge.prize {
+    background: #2c3e50;
+  }
+  
+  .badge.game {
+    background: orange;
+  }
+  
+  .transaction-section {
+    margin-top: 30px;
+  }
+  
+  .transaction-table {
+    margin-top: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+  
+  .table-header, .table-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr 1fr 1fr;
+    padding: 12px 15px;
+    font-size: 14px;
+    align-items: center;
+  }
+  
+  .table-header {
+    background: #ddd;
+    font-weight: bold;
+  }
+  
+  .table-row:nth-child(even) {
+    background: #f1f1f1;
+  }
+  
+  .debit {
+    color: red;
+  }
+  
+  .credit {
+    color: green;
+  }
+  
+  .success {
+    color: green;
+    font-weight: bold;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .match-header {
+      flex-direction: column;
+      align-items: center;
+    }
+    .player-card {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+  

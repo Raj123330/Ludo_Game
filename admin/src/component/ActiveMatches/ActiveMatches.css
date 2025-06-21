@@ -1,0 +1,85 @@
+.match-history-container {
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .search-bar input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .find-btn {
+    background-color: #d100b8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .match-table {
+    margin-top: 30px;
+    background: #fff;
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+  
+  .table-header,
+  .table-row {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(120px, 1fr));
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .table-header {
+    background: #f7f9fc;
+    font-weight: bold;
+    color: #5a5a89;
+  }
+  
+  .table-row {
+    align-items: center;
+    color: #333;
+  }
+  
+  .small {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .status {
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: inline-block;
+  }
+  
+  .status.cancelled {
+    background: #ff2c2c;
+    color: white;
+  }
+  
+  .open-link {
+    font-size: 12px;
+    color: #5a5a89;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,91 @@
+/* Notification Container */
+.notification-container {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  height: 100%;
+}
+
+/* Header Styles */
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notification-header h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+/* Send Notification Button */
+.send-button {
+  background: linear-gradient(to right, #ec4899, #8b5cf6);
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+
+.send-button:hover {
+  background-color: #4338ca;
+}
+
+.bell-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Card Style */
+.notification-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+/* Table Styles */
+.notification-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.notification-table th,
+.notification-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.notification-table th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+}
+
+.notification-table td {
+  color: #4b5563;
+  white-space: pre-line; /* To support \n line breaks */
+}
+
+/* Seen By Badge */
+.seen-badge {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-block;
+  text-align: center;
+}

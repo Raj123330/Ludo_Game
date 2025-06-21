@@ -1,0 +1,73 @@
+.user-profile-header {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 20px;
+  }
+  
+  .gradient-strip {
+    background: linear-gradient(90deg, #e848b8, #a153ec);
+    border-radius: 20px;
+    color: white;
+  }
+  
+  .profile-card {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: row;
+    position: relative; /* absolute hatao */
+    background: linear-gradient(to right, #ffe5f8, #f7edff);
+    border-radius: 16px;
+    padding: 16px 24px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  
+  .left-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #ccc;
+  }
+  
+  .user-details h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #2c2c2c;
+  }
+  
+  .user-details p {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: #6b6b6b;
+  }
+  .tab-content {
+    padding: 20px;
+    background: #fff;
+    margin: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  
+  
+  .tab-links button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    margin-left: 20px;
+    color: #444;
+    cursor: pointer;
+  }
+  
+  .tab-links .active-tab {
+    background-color: #d6009a;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 16px;
+  }

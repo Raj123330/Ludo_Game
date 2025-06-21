@@ -1,0 +1,85 @@
+.user-table-container {
+    padding: 20px;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .search-bar button {
+    padding: 10px 20px;
+    background-color: #d100b0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .table-wrapper {
+    background-color: white;
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  th,
+  td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .status {
+    background-color: #bccce6;
+    color: #22334f;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .open-btn {
+    background-color: #d100b0;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .no-result {
+    text-align: center;
+    color: gray;
+    padding: 20px;
+  }
+  

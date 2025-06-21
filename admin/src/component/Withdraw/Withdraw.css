@@ -1,0 +1,140 @@
+.withdraw-requests-container {
+    padding: 20px;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .search-bar {
+    display: flex;
+    margin: 20px 0;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px 0 0 8px;
+    border: 2px solid #e6007a;
+    outline: none;
+  }
+  
+  .find-btn {
+    padding: 10px 16px;
+    background: #e6007a;
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+  }
+  
+  .table-wrapper {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th {
+    text-align: left;
+    color: #333;
+    padding-bottom: 10px;
+  }
+  
+  td {
+    padding: 12px 8px;
+    border-top: 1px solid #eee;
+    vertical-align: top;
+  }
+  
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .subtext {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .status-pill {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: white;
+    display: inline-block;
+  }
+  
+  .status-pill.completed {
+    background: #51d661;
+  }
+  
+  .status-pill.rejected {
+    background: #ef4444;
+  }
+  
+  .action-btn {
+    background: #1e1f4b;
+    color: white;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .user-info {
+    position: relative;
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+  }
+  
+  .user-info:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .logout-popup {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 100;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .logout-btn {
+    color: rgb(79, 77, 77);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  
+  

@@ -1,0 +1,90 @@
+.custom-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 200px;
+    z-index: 1000;
+  }
+  
+  .custom-modal {
+    background: white;
+    padding: 25px 25px 30px 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  .modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .input-group {
+    width: 90%;
+    margin-bottom: 20px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+    outline: none;
+  }
+  
+  .input-group input::placeholder {
+    color: #999;
+    text-align: left;
+  }
+  
+  .input-group .calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+  }
+  
+  .apply-btn {
+    width: 100%;
+    background: linear-gradient(to right, #ec008c, #833ab4);
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+  }
+  
+  .apply-btn:hover {
+    background: linear-gradient(to right, #d60077, #6f2aa2);
+  }
+  
+  /* Close button */
+  .close-icon {
+    right: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,11 @@
+/* Dashboardscreen.css */
+.layout {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .column.m {
+    width: 100%; /* Or adjust the width as needed */
+  }
+  

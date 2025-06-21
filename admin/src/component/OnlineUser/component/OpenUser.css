@@ -1,0 +1,170 @@
+.profile-container {
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #2c3e50;
+  }
+  
+  /* Header */
+  .profile-header {
+    background: linear-gradient(to right, #ec4899, #a855f7);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .profile-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .profile-nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .profile-nav button {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .nav-active {
+    background-color: white;
+    color: #c026d3;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-weight: bold;
+  }
+  
+  .status-actions {
+    display: flex;
+    background-color:#fff;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .badges {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .badge {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  .badge.offline {
+    background-color: #d9e2f0;
+    color: #344767;
+  }
+  
+  .badge.kyc {
+    background-color: #c7d3e2;
+    color: #344767;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .actions button {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .wallet {
+    background-color: #54d14f;
+    color: white;
+  }
+  
+  .notify {
+    background-color: #a600d4;
+    color: white;
+  }
+  
+  .ban {
+    background-color: #f54242;
+    color: white;
+  }
+  
+  
+  .profile-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .profile-card {
+    flex-direction: column;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-top: 10px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+    font-size: 14px;
+    color: #444;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .profile-header {
+      flex-direction: column;
+    }
+  
+    .profile-actions {
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+  }
+  

@@ -1,0 +1,32 @@
+.withdraw-requests-container {
+    padding: 20px;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .search-bar {
+    display: flex;
+    margin: 10px 0;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px 0 0 8px;
+    border: 2px solid #e6007a;
+    outline: none;
+  }
+  
+  .find-btn {
+    padding: 10px 16px;
+    background: #e6007a;
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+  }
