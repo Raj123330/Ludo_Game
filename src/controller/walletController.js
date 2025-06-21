@@ -13,8 +13,8 @@ const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-console.log("id ::::::", process.env.RAZORPAY_KEY_ID);
-console.log("secret:::::::::", process.env.RAZORPAY_KEY_SECRET);
+//console.log("id ::::::", process.env.RAZORPAY_KEY_ID);
+//console.log("secret:::::::::", process.env.RAZORPAY_KEY_SECRET);
 // Withdraw funds from wallet
 const withdrawFunds = async (req, res) => {
   try {
