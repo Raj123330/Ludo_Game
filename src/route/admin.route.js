@@ -44,13 +44,13 @@ router.get(
   authorizeRoles("superadmin"),
   getAllSubadmins
 );
-router.get(
+/*router.get(
   "/allusers",
   authenticateAdmin,
   authorizeRoles("superadmin", "subadmin"),
   getAllUsers
-);
-
+);*/
+router.get("/allusers", getAllUsers);
 router.get(
   "/getSingleUser/:id",
   authenticateAdmin,
