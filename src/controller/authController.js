@@ -7,38 +7,37 @@ import { client, twilioPhone } from "../util/twilio.js";
 // Temporary token blacklist storage (use Redis in production)
 let tokenBlacklist = new Set();
 
+const otpStore = new Map();
 const login = async (req, res) => {
   try {
     const { mobile } = req.body;
 
-    // Find user
+    // Check user exists
     const user = await User.findOne({ where: { mobile } });
     if (!user) {
       return res.status(400).json({ message: "Invalid number" });
     }
 
-    // Verify password
-    //const isMatch = await bcrypt.compare(password, user.password);
-    //if (!isMatch) {
-    //return res.status(400).json({ message: "Invalid email or password" });
-    //}
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-    // Generate JWT Token
-    const token = jwt.sign(
-      { id: user.id, mobile: user.mobile },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    // Send OTP using Twilio
+    await client.messages.create({
+      body: `Your WisdomEmpire OTP is: ${otp}`,
+      from: process.env.TWILIO_PHONE, // e.g., +1XXXXXXXXXX
+      to: `+91${mobile}`,
+    });
 
-    res.json({
-      message: "Login successful",
-      token,
-      user: { id: user.id, mobile: user.mobile },
+    // Save OTP temporarily (for demo only)
+    otpStore.set(mobile, otp);
+
+    return res.status(200).json({
+      message: "OTP sent successfully",
+      mobile,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error logging in", error: error.message });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -177,77 +176,31 @@ const submitKYC = async (req, res) => {
   }
 };*/
 const verifyOtp = async (req, res) => {
-  try {
-    const { mobile, otp } = req.body;
+  const { mobile, otp } = req.body;
 
-    // Add more detailed logging to debug the issue
-    console.log("Request body:", req.body);
-    console.log("Mobile from request:", mobile);
-    console.log("OTP from request:", otp);
-
-    // Check if mobile and OTP are provided
-    if (!mobile || !otp) {
-      return res
-        .status(400)
-        .json({ message: "Mobile number and OTP are required" });
-    }
-
-    // Ensure mobile is a string and properly formatted
-    const formattedMobile = String(mobile).trim();
-    if (formattedMobile.length !== 10) {
-      return res.status(400).json({ message: "Invalid mobile number format" });
-    }
-
-    // Find the user with the provided mobile number
-    const user = await User.findOne({ where: { mobile: formattedMobile } });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Verify OTP
-    if (user.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP" });
-    }
-
-    // Check if OTP has expired
-    if (user.otpExpiresAt < new Date()) {
-      return res.status(400).json({ message: "OTP expired" });
-    }
-
-    // Clear OTP after successful verification
-    user.otp = null;
-    user.otpExpiresAt = null;
-    await user.save();
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { id: user.id, mobile: user.mobile },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    // Check if the user is already registered (i.e., user has username set)
-    if (!user.username) {
-      return res.status(200).json({
-        message: "OTP verified successfully. User is new.",
-        token,
-        user: { id: user.id, mobile: user.mobile, isNewUser: true },
-      });
-    } else {
-      return res.status(200).json({
-        message: "OTP verified successfully. User already exists.",
-        token,
-        user: { id: user.id, mobile: user.mobile, isNewUser: false },
-      });
-    }
-  } catch (error) {
-    console.error("OTP verification error:", error);
-    res
-      .status(500)
-      .json({ message: "OTP verification failed", error: error.message });
+  const validOtp = otpStore.get(mobile);
+  if (!validOtp || validOtp != otp) {
+    return res.status(400).json({ message: "Invalid or expired OTP" });
   }
+
+  // OTP is valid – generate token
+  const user = await User.findOne({ where: { mobile } });
+
+  const token = jwt.sign(
+    { id: user.id, mobile: user.mobile },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  otpStore.delete(mobile); // clean up
+
+  res.status(200).json({
+    message: "OTP verified successfully",
+    token,
+    user: { id: user.id, mobile: user.mobile },
+  });
 };
+
 const generateAndSaveOtp = async (mobile) => {
   try {
     const user = await User.findOne({ where: { mobile } });
