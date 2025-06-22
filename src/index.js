@@ -6,26 +6,27 @@ import { initializeSocket } from "./config/socket.js";
 import "./cron/statusUpdate.js";
 
 dotenv.config({ path: "./.env" });
+
 const PORT = process.env.PORT || 8000;
 const server = http.createServer(app);
+
 // Attach WebSocket to server
 const io = initializeSocket(server);
 
 (async () => {
   try {
-    await sequelize.authenticate();
-    // console.log("Database connected successfully!");
+    await sequelize.authenticate(); // Test DB connection
+    console.log("✅ Database connection successful!");
 
-    await sequelize.sync(); // Sync models with the database
-    //console.log("Database synced!");
+    await sequelize.sync(); // Sync all models with DB
+    console.log("✅ Database synced successfully");
 
-    // Start server only after DB is ready
     server.listen(PORT, () => {
-      console.log(` Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (err) {
-    console.error("Database connection error:", err);
-    process.exit(1); // Stop process if DB fails
+    console.error("❌ Database connection error:", err.message);
+    process.exit(1); // Exit if DB fails
   }
 })();
 

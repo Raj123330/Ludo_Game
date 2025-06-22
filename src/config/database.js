@@ -16,7 +16,7 @@ const sequelize = new Sequelize(
 );
 
 //  Correct way to test the connection
-const testDbConnection = async () => {
+/*const testDbConnection = async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connection successful!");
@@ -26,7 +26,7 @@ const testDbConnection = async () => {
 };
 
 // Call the function immediately
-testDbConnection();
+testDbConnection();*/
 
 export { sequelize };
 /*
