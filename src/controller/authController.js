@@ -11,24 +11,25 @@ const otpStore = new Map();
 const login = async (req, res) => {
   try {
     const { mobile } = req.body;
+    console.log("login(): Got request for mobile:", mobile);
 
-    // Check user exists
     const user = await User.findOne({ where: { mobile } });
     if (!user) {
+      console.log("User not found");
       return res.status(400).json({ message: "Invalid number" });
     }
 
-    // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000);
+    console.log("Generated OTP:", otp);
 
-    // Send OTP using Twilio
     await client.messages.create({
       body: `Your WisdomEmpire OTP is: ${otp}`,
-      from: process.env.TWILIO_PHONE, // e.g., +1XXXXXXXXXX
+      from: process.env.TWILIO_PHONE,
       to: `+91${mobile}`,
     });
 
-    // Save OTP temporarily (for demo only)
+    console.log("OTP sent via Twilio to", mobile);
+
     otpStore.set(mobile, otp);
 
     return res.status(200).json({
@@ -37,7 +38,9 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
