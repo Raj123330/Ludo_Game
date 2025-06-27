@@ -8,7 +8,7 @@ import { client, twilioPhone } from "../util/twilio.js";
 let tokenBlacklist = new Set();
 
 const otpStore = new Map();
-const login = async (req, res) => {
+/*const login = async (req, res) => {
   try {
     const { mobile } = req.body;
     console.log("login(): Got request for mobile:", mobile);
@@ -42,7 +42,7 @@ const login = async (req, res) => {
       .status(500)
       .json({ message: "Server error", error: error.message });
   }
-};
+};*/
 
 const logout = async (req, res) => {
   try {
@@ -85,55 +85,77 @@ const getProfile = async (req, res) => {
   }
 };
 // REGISTER/LOGIN
-const register = async (req, res) => {
+const registerOrLogin = async (req, res) => {
   try {
     const { mobile, username, referredBy } = req.body;
-    console.log("my mobile numer", mobile, username);
-    if (!mobile || mobile.length !== 10 || !username) {
-      return res.status(400).json({ message: "Enter a valid phone number" });
+
+    if (!mobile || mobile.length !== 10) {
+      return res
+        .status(400)
+        .json({ message: "Enter a valid 10-digit mobile number" });
     }
 
-    let user = await User.findOne({ where: { mobile, username } });
-    // generate referral code
-    const referralCode = `${username.toUpperCase()}${Math.floor(
-      100 + Math.random() * 900
-    )}`;
+    // Try to find existing user
+    let user = await User.findOne({ where: { mobile } });
+
     if (!user) {
-      // Create new user if not exists
+      // If user not found, username is required
+      if (!username) {
+        return res
+          .status(400)
+          .json({ message: "Username is required for new users" });
+      }
+
+      // Generate referral code
+      const referralCode = `${username.toUpperCase()}${Math.floor(
+        100 + Math.random() * 900
+      )}`;
+
+      // Create new user
       user = await User.create({
         mobile,
         username,
         referralCode,
         referredBy: referredBy || null,
+        walletBalance: 0,
+        referralBonus: 0,
+        totalReferrals: 0,
       });
-    }
-    // update referral bonus and count if referredBy exists
-    if (referredBy) {
-      const referrer = await User.findOne({
-        where: { referralCode: referredBy },
-      });
-      if (referrer) {
-        referrer.totalReferrals += 1;
-        referrer.referralBonus += 50; // assume ₹50 bonus
-        referrer.walletBalance += 50;
-        await referrer.save();
+
+      // Handle referral logic
+      if (referredBy) {
+        const referrer = await User.findOne({
+          where: { referralCode: referredBy },
+        });
+        if (referrer) {
+          referrer.totalReferrals += 1;
+          referrer.referralBonus += 50;
+          referrer.walletBalance += 50;
+          await referrer.save();
+        }
       }
     }
-    // Generate OTP and save to user
+
+    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
     user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
     await user.save();
-    console.log("your otp", otp);
+
+    console.log("OTP sent (for development):", otp);
+
     res.status(200).json({
-      message: "OTP sent to your phone number",
-      otp, // ✅ Only for development; remove in production
+      message:
+        user.createdAt === user.updatedAt
+          ? "Registered successfully, OTP sent"
+          : "OTP sent for login",
+      otp, // ⚠️ Remove in production
       userId: user.id,
       mobile: user.mobile,
       username: user.username,
     });
   } catch (error) {
-    console.error("Registration/Login error:", error.message);
+    console.error("Register/Login Error:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -157,7 +179,7 @@ const submitKYC = async (req, res) => {
   }
 };
 // Add the missing generateAndSaveOtp function
-/*const generateAndSaveOtp = async (mobile) => {
+const generateAndSaveOtp = async (mobile) => {
   try {
     const user = await User.findOne({ where: { mobile } });
 
@@ -177,10 +199,10 @@ const submitKYC = async (req, res) => {
   } catch (error) {
     throw error;
   }
-};*/
+};
 const verifyOtp = async (req, res) => {
   const { mobile, otp } = req.body;
-
+  console.log("your otp on ", mobile, " is", otp);
   const validOtp = otpStore.get(mobile);
   if (!validOtp || validOtp != otp) {
     return res.status(400).json({ message: "Invalid or expired OTP" });
@@ -204,7 +226,7 @@ const verifyOtp = async (req, res) => {
   });
 };
 
-const generateAndSaveOtp = async (mobile) => {
+/*const generateAndSaveOtp = async (mobile) => {
   try {
     const user = await User.findOne({ where: { mobile } });
 
@@ -232,7 +254,7 @@ const generateAndSaveOtp = async (mobile) => {
     console.error("Error generating/sending OTP:", error.message);
     throw error;
   }
-};
+};*/
 // RESEND OTP
 const resendOtp = async (req, res) => {
   try {
@@ -346,9 +368,8 @@ const uploadAvatar = async (req, res) => {
 };
 
 export {
-  register,
+  registerOrLogin,
   submitKYC,
-  login,
   logout,
   getProfile,
   verifyOtp,

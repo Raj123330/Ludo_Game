@@ -1,8 +1,7 @@
 import express from "express";
 import {
-  register,
+  registerOrLogin,
   submitKYC,
-  login,
   logout,
   getProfile,
   verifyOtp,
@@ -15,10 +14,9 @@ import authenticateUser from "../middleware/authmiddleware.js";
 
 const router = express.Router();
 
-router.post("/register", register);
+router.post("/register", registerOrLogin);
 router.post("/verify", verifyOtp);
 router.post("/resend-otp", resendOtp);
-router.post("/login", login);
 router.post("/username", authenticateUser, submitUserName);
 router.post("/logout", authenticateUser, logout);
 router.get("/profile", authenticateUser, getProfile);
