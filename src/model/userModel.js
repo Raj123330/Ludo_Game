@@ -8,6 +8,7 @@ const User = sequelize.define("User", {
     primaryKey: true,
   },
   username: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, unique: true },
   mobile: { type: DataTypes.STRING, allowNull: false, unique: true },
   referralCode: { type: DataTypes.STRING },
   referredBy: { type: DataTypes.STRING },

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../model/userModel.js";
 import { uploadOnCloudinary } from "../../src/util/cloudinary.js";
-import { client, twilioPhone } from "../util/twilio.js";
+import nodemailer from "nodemailer";
 //import { generateAndSaveOtp } from "../util/genrateAndsend.js";
 // Temporary token blacklist storage (use Redis in production)
 let tokenBlacklist = new Set();
@@ -85,14 +85,21 @@ const getProfile = async (req, res) => {
   }
 };
 // REGISTER/LOGIN
-const registerOrLogin = async (req, res) => {
+/*const registerOrLogin = async (req, res) => {
   try {
-    const { mobile, username, referredBy } = req.body;
+    const { email, mobile, username, referredBy } = req.body;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!mobile || mobile.length !== 10) {
       return res
         .status(400)
         .json({ message: "Enter a valid 10-digit mobile number" });
+    }
+
+    // Check email format
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ message: "Enter a valid email address" });
     }
 
     // Try to find existing user
@@ -113,6 +120,7 @@ const registerOrLogin = async (req, res) => {
 
       // Create new user
       user = await User.create({
+        email,
         mobile,
         username,
         referralCode,
@@ -137,6 +145,7 @@ const registerOrLogin = async (req, res) => {
     }
 
     // Generate OTP
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
     user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
@@ -156,6 +165,67 @@ const registerOrLogin = async (req, res) => {
     });
   } catch (error) {
     console.error("Register/Login Error:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};*/
+
+const registerOrLogin = async (req, res) => {
+  try {
+    const { email, mobile } = req.body;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ message: "Enter a valid email address" });
+    }
+    if (!mobile || mobile.length !== 10) {
+      return res
+        .status(400)
+        .json({ message: "Enter a valid 10-digit mobile number" });
+    }
+
+    let user = await User.findOne({ where: { mobile, email } });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    if (!user) {
+      // Temporarily store OTP for new user creation later
+      user = await User.create({
+        email,
+        mobile,
+        otp,
+        otpExpiresAt,
+      });
+    } else {
+      user.otp = otp;
+      user.otpExpiresAt = otpExpiresAt;
+      await user.save();
+    }
+
+    // Send OTP via email
+    const transporter = nodemailer.createTransport({
+      host: "smtp-relay.brevo.com", // or smtp.gmail.com
+      port: 587,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Ludo Empire" <no-reply@ludoapp.com>',
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP is ${otp}. It expires in 5 minutes.`,
+    });
+
+    return res.status(200).json({
+      message: "OTP sent to your email",
+      userExists: !!user.username, // if username exists, no need to ask again
+      userId: user.id,
+    });
+  } catch (error) {
+    console.error("OTP Request Error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -200,7 +270,8 @@ const generateAndSaveOtp = async (mobile) => {
     throw error;
   }
 };
-const verifyOtp = async (req, res) => {
+
+/*const verifyOtp = async (req, res) => {
   const { mobile, otp } = req.body;
   console.log("your otp on ", mobile, " is", otp);
   const validOtp = otpStore.get(mobile);
@@ -224,6 +295,72 @@ const verifyOtp = async (req, res) => {
     token,
     user: { id: user.id, mobile: user.mobile },
   });
+};*/
+
+const verifyOtp = async (req, res) => {
+  try {
+    const { id, otp, username, referredBy } = req.body;
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.otp !== otp || new Date(user.otpExpiresAt) < new Date()) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // Clear OTP fields
+    user.otp = null;
+    user.otpExpiresAt = null;
+
+    // If username doesn't exist, create profile
+    let isNew = false;
+    if (!user.username) {
+      if (!username)
+        return res
+          .status(400)
+          .json({ message: "Username required for new users" });
+
+      const referralCode = `${username.toUpperCase()}${Math.floor(
+        100 + Math.random() * 900
+      )}`;
+
+      user.username = username;
+      user.referralCode = referralCode;
+      user.referredBy = referredBy || null;
+      user.walletBalance = 0;
+      user.referralBonus = 0;
+      user.totalReferrals = 0;
+      isNew = true;
+
+      // Handle referral logic
+      if (referredBy) {
+        const referrer = await User.findOne({
+          where: { referralCode: referredBy },
+        });
+        if (referrer) {
+          referrer.totalReferrals += 1;
+          referrer.referralBonus += 50;
+          referrer.walletBalance += 50;
+          await referrer.save();
+        }
+      }
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      message: isNew ? "Registered successfully" : "Login successful",
+      user: {
+        id: user.id,
+        mobile: user.mobile,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    console.error("OTP Verification Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 /*const generateAndSaveOtp = async (mobile) => {
@@ -256,30 +393,53 @@ const verifyOtp = async (req, res) => {
   }
 };*/
 // RESEND OTP
+
 const resendOtp = async (req, res) => {
   try {
-    const { mobile } = req.body;
-    console.log("your backend resend", mobile);
+    const { email } = req.body;
+    console.log("Your backend resend:", email);
 
-    if (!mobile) {
-      return res.status(400).json({ message: "Mobile number is required" });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
     }
 
-    const user = await User.findOne({ where: { mobile } });
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const { otp } = await generateAndSaveOtp(mobile);
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp;
+    user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
+    await user.save();
 
-    res.status(200).json({
-      message: "OTP resent successfully",
-      otp, // remove in production
+    // Send OTP via email using Brevo SMTP
+    const transporter = nodemailer.createTransport({
+      host: "smtp-relay.brevo.com",
+      port: 587,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"Ludo Empire" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "Your OTP Code (Resent)",
+      text: `Your new OTP is ${otp}. It will expire in 5 minutes.`,
+    });
+
+    return res.status(200).json({
+      message: "OTP resent to your email",
+      otp, // ⚠️ Remove in production
       userId: user.id,
-      mobile: user.mobile, // Added to ensure mobile is returned to frontend
+      email: user.email,
     });
   } catch (error) {
+    console.error("Resend OTP Error:", error.message);
     res
       .status(500)
       .json({ message: "Error resending OTP", error: error.message });
