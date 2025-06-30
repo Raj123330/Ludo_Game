@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { User } from "../model/userModel.js";
 import { uploadOnCloudinary } from "../../src/util/cloudinary.js";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 //import { generateAndSaveOtp } from "../util/genrateAndsend.js";
 // Temporary token blacklist storage (use Redis in production)
 let tokenBlacklist = new Set();
@@ -172,7 +174,7 @@ const getProfile = async (req, res) => {
 const registerOrLogin = async (req, res) => {
   try {
     const { email, mobile } = req.body;
-
+    console.log("Register/Login Request:", req.body);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       return res.status(400).json({ message: "Enter a valid email address" });
@@ -202,10 +204,18 @@ const registerOrLogin = async (req, res) => {
       await user.save();
     }
 
+    console.log(
+      "email :",
+      process.env.EMAIL_USER,
+      "pass",
+      process.env.EMAIL_PASS
+    );
     // Send OTP via email
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com", // or smtp.gmail.com
       port: 587,
+      service: "gmail",
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -303,6 +313,8 @@ const verifyOtp = async (req, res) => {
 
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (!otp) return res.status(400).json({ message: "OTP is required" });
 
     if (user.otp !== otp || new Date(user.otpExpiresAt) < new Date()) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
@@ -419,6 +431,8 @@ const resendOtp = async (req, res) => {
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
       port: 587,
+      service: "gmail",
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
