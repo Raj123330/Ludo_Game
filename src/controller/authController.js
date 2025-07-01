@@ -212,8 +212,6 @@ const registerOrLogin = async (req, res) => {
     );
     // Send OTP via email
     const transporter = nodemailer.createTransport({
-      host: "smtp-relay.brevo.com", // or smtp.gmail.com
-      port: 587,
       service: "gmail",
       secure: false,
       auth: {
