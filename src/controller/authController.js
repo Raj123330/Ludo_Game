@@ -307,7 +307,7 @@ const generateAndSaveOtp = async (mobile) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { id, otp, username, referredBy } = req.body;
+    const { id, otp } = req.body;
 
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -322,49 +322,18 @@ const verifyOtp = async (req, res) => {
     user.otp = null;
     user.otpExpiresAt = null;
 
-    // If username doesn't exist, create profile
-    let isNew = false;
-    if (!user.username) {
-      if (!username)
-        return res
-          .status(400)
-          .json({ message: "Username required for new users" });
-
-      const referralCode = `${username.toUpperCase()}${Math.floor(
-        100 + Math.random() * 900
-      )}`;
-
-      user.username = username;
-      user.referralCode = referralCode;
-      user.referredBy = referredBy || null;
-      user.walletBalance = 0;
-      user.referralBonus = 0;
-      user.totalReferrals = 0;
-      isNew = true;
-
-      // Handle referral logic
-      if (referredBy) {
-        const referrer = await User.findOne({
-          where: { referralCode: referredBy },
-        });
-        if (referrer) {
-          referrer.totalReferrals += 1;
-          referrer.referralBonus += 50;
-          referrer.walletBalance += 50;
-          await referrer.save();
-        }
-      }
-    }
-
+    // Just save and mark verified
+    user.accountStatus = "Verified";
     await user.save();
 
     return res.status(200).json({
-      message: isNew ? "Registered successfully" : "Login successful",
+      message: "OTP verified successfully",
       user: {
         id: user.id,
         mobile: user.mobile,
         email: user.email,
         username: user.username,
+        accountStatus: user.accountStatus,
       },
     });
   } catch (error) {
@@ -474,41 +443,57 @@ function generateRandomUsername(mobile) {
 
 const submitUserName = async (req, res) => {
   try {
-    const { username, mobile } = req.body;
+    const { id, username } = req.body;
 
-    if (!mobile) {
-      return res.status(400).json({ message: "Mobile number is required." });
+    if (!id || !username) {
+      return res
+        .status(400)
+        .json({ message: "User ID and Username are required." });
     }
 
-    // Generate random username if none provided
-    const finalUserName =
-      username && username.trim() !== ""
-        ? username.trim()
-        : generateRandomUsername(mobile);
+    const finalUserName = username.trim().toLowerCase();
 
-    // Find user by mobile and update the username
-    const user = await User.findOne({ where: { mobile } });
+    // Check if the username already exists (optional, to avoid duplicates)
+    const existing = await User.findOne({ where: { username: finalUserName } });
+    if (existing) {
+      return res
+        .status(400)
+        .json({ message: "Username already taken. Please choose another." });
+    }
 
+    // Generate unique referral code e.g., "TRAPTI548"
+    const referralCode = `${finalUserName.toUpperCase()}${Math.floor(
+      100 + Math.random() * 900
+    )}`;
+
+    // Find user by ID
+    const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update the user's username
+    // Save username and referral code
     user.username = finalUserName;
+    user.referralCode = referralCode;
     await user.save();
 
-    res.status(200).json({
-      message: "Username saved successfully!",
-      user,
+    return res.status(200).json({
+      message: "Username and referral code saved successfully!",
+      user: {
+        id: user.id,
+        username: user.username,
+        referralCode: user.referralCode,
+      },
     });
   } catch (error) {
     console.error("Error saving username:", error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to save username",
       error: error.message,
     });
   }
 };
+
 // controllers/userController.js
 const uploadAvatar = async (req, res) => {
   try {
