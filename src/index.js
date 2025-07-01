@@ -18,8 +18,9 @@ const io = initializeSocket(server);
     await sequelize.authenticate(); // Test DB connection
     console.log("✅ Database connection successful!");
 
-    await sequelize.sync(); // Sync all models with DB
-    console.log("✅ Database synced successfully");
+    await sequelize.sync({ alter: true }); // Sync all models with DB
+
+    console.log("✅ Database synced updated successfully");
 
     server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
