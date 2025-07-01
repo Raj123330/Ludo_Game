@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/register", registerOrLogin);
 router.post("/verify", verifyOtp);
 router.post("/resend-otp", resendOtp);
-router.post("/username", authenticateUser, submitUserName);
+router.post("/username", submitUserName); //add middleware only for check i removed
 router.post("/logout", authenticateUser, logout);
 router.get("/profile", authenticateUser, getProfile);
 router.post(
