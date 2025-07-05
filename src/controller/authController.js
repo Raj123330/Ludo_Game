@@ -305,7 +305,7 @@ const generateAndSaveOtp = async (mobile) => {
   });
 };*/
 
-const verifyOtp = async (req, res) => {
+/*const verifyOtp = async (req, res) => {
   try {
     const { id, otp } = req.body;
 
@@ -339,6 +339,61 @@ const verifyOtp = async (req, res) => {
   } catch (error) {
     console.error("OTP Verification Error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};*/
+
+const verifyOtp = async (req, res) => {
+  try {
+    const { id, otp } = req.body;
+
+    if (!id || !otp) {
+      return res.status(400).json({ message: "User ID and OTP are required" });
+    }
+
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("🔍 OTP Verification Attempt");
+    console.log("Entered OTP:", otp);
+    console.log("Stored OTP:", user.otp);
+    console.log("OTP Expiry:", user.otpExpiresAt);
+    console.log("Current Time:", new Date());
+
+    // Check if OTP matches
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Incorrect OTP" });
+    }
+
+    // Check if OTP expired
+    if (new Date(user.otpExpiresAt) < new Date()) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    // ✅ All good — mark user verified
+    user.otp = null;
+    user.otpExpiresAt = null;
+    user.accountStatus = "Verified";
+    user.lastActive = new Date();
+    await user.save();
+
+    return res.status(200).json({
+      message: "OTP verified successfully",
+      user: {
+        id: user.id,
+        mobile: user.mobile,
+        email: user.email,
+        username: user.username,
+        accountStatus: user.accountStatus,
+      },
+    });
+  } catch (error) {
+    console.error("❌ OTP Verification Error:", error);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
