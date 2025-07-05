@@ -279,55 +279,39 @@ const generateAndSaveOtp = async (mobile) => {
   }
 };
 
-/*const verifyOtp = async (req, res) => {
-  const { mobile, otp } = req.body;
-  console.log("your otp on ", mobile, " is", otp);
-  const validOtp = otpStore.get(mobile);
-  if (!validOtp || validOtp != otp) {
-    return res.status(400).json({ message: "Invalid or expired OTP" });
-  }
-
-  // OTP is valid – generate token
-  const user = await User.findOne({ where: { mobile } });
-
-  const token = jwt.sign(
-    { id: user.id, mobile: user.mobile },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  otpStore.delete(mobile); // clean up
-
-  res.status(200).json({
-    message: "OTP verified successfully",
-    token,
-    user: { id: user.id, mobile: user.mobile },
-  });
-};*/
-
-/*const verifyOtp = async (req, res) => {
+const verifyOtp = async (req, res) => {
   try {
     const { id, otp } = req.body;
 
+    if (!id || !otp) {
+      return res.status(400).json({ message: "User ID and OTP are required" });
+    }
+
     const user = await User.findByPk(id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    if (!otp) return res.status(400).json({ message: "OTP is required" });
-
-    if (user.otp !== otp || new Date(user.otpExpiresAt) < new Date()) {
+    // Validate OTP
+    const now = new Date();
+    if (!user.otp || user.otp !== otp || new Date(user.otpExpiresAt) < now) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    // Clear OTP fields
+    // ✅ Clear OTP and mark verified
     user.otp = null;
     user.otpExpiresAt = null;
-
-    // Just save and mark verified
     user.accountStatus = "Verified";
     await user.save();
 
+    // ✅ Generate JWT
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
     return res.status(200).json({
       message: "OTP verified successfully",
+      token,
       user: {
         id: user.id,
         mobile: user.mobile,
@@ -338,122 +322,34 @@ const generateAndSaveOtp = async (mobile) => {
     });
   } catch (error) {
     console.error("OTP Verification Error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};*/
-
-const verifyOtp = async (req, res) => {
-  try {
-    const { id, otp } = req.body;
-
-    if (!id || !otp) {
-      return res.status(400).json({ message: "User ID and OTP are required" });
-    }
-
-    const user = await User.findByPk(id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    console.log("🔍 OTP Verification Attempt");
-    console.log("Entered OTP:", otp);
-    console.log("Stored OTP:", user.otp);
-    console.log("OTP Expiry:", user.otpExpiresAt);
-    console.log("Current Time:", new Date());
-
-    // Check if OTP matches
-    if (user.otp !== otp) {
-      return res.status(400).json({ message: "Incorrect OTP" });
-    }
-
-    // Check if OTP expired
-    if (new Date(user.otpExpiresAt) < new Date()) {
-      return res.status(400).json({ message: "OTP has expired" });
-    }
-
-    // ✅ All good — mark user verified
-    user.otp = null;
-    user.otpExpiresAt = null;
-    user.accountStatus = "Verified";
-    user.lastActive = new Date();
-    await user.save();
-
-    return res.status(200).json({
-      message: "OTP verified successfully",
-      user: {
-        id: user.id,
-        mobile: user.mobile,
-        email: user.email,
-        username: user.username,
-        accountStatus: user.accountStatus,
-      },
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
     });
-  } catch (error) {
-    console.error("❌ OTP Verification Error:", error);
-    return res
-      .status(500)
-      .json({ message: "Server error", error: error.message });
   }
 };
-
-/*const generateAndSaveOtp = async (mobile) => {
-  try {
-    const user = await User.findOne({ where: { mobile } });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Generate OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // Save OTP and expiry
-    user.otp = otp;
-    user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-    await user.save();
-
-    // ✅ Send OTP via Twilio
-    await client.messages.create({
-      body: `Your OTP is ${otp}`,
-      from: twilioPhone,
-      to: mobile.startsWith("+") ? mobile : `+91${mobile}`, // or +1... depending on your region
-    });
-
-    return { otp };
-  } catch (error) {
-    console.error("Error generating/sending OTP:", error.message);
-    throw error;
-  }
-};*/
-// RESEND OTP
-
 const resendOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log("Your backend resend:", email);
-
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
     }
 
     const user = await User.findOne({ where: { email } });
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate OTP
+    // Generate new OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
-    user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
+    user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
     await user.save();
 
-    // Send OTP via email using Brevo SMTP
+    // Send email via Brevo SMTP
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
       port: 587,
-      service: "gmail",
       secure: false,
       auth: {
         user: process.env.EMAIL_USER,
@@ -463,22 +359,22 @@ const resendOtp = async (req, res) => {
 
     await transporter.sendMail({
       from: `"Ludo Empire" <${process.env.EMAIL_USER}>`,
-      to: user.email,
+      to: email,
       subject: "Your OTP Code (Resent)",
-      text: `Your new OTP is ${otp}. It will expire in 5 minutes.`,
+      text: `Your OTP is ${otp}. It expires in 5 minutes.`,
     });
 
     return res.status(200).json({
-      message: "OTP resent to your email",
-      otp, // ⚠️ Remove in production
+      message: "OTP resent successfully",
       userId: user.id,
       email: user.email,
     });
   } catch (error) {
     console.error("Resend OTP Error:", error.message);
-    res
-      .status(500)
-      .json({ message: "Error resending OTP", error: error.message });
+    return res.status(500).json({
+      message: "Error resending OTP",
+      error: error.message,
+    });
   }
 };
 
@@ -500,7 +396,7 @@ const submitUserName = async (req, res) => {
   try {
     const { id, username } = req.body;
 
-    if (!id || !username) {
+    if (!id || !username?.trim()) {
       return res
         .status(400)
         .json({ message: "User ID and Username are required." });
@@ -508,26 +404,23 @@ const submitUserName = async (req, res) => {
 
     const finalUserName = username.trim().toLowerCase();
 
-    // Check if the username already exists (optional, to avoid duplicates)
+    // Check if username already exists
     const existing = await User.findOne({ where: { username: finalUserName } });
     if (existing) {
-      return res
-        .status(400)
-        .json({ message: "Username already taken. Please choose another." });
+      return res.status(400).json({
+        message: "Username already taken. Please choose another.",
+      });
     }
 
-    // Generate unique referral code e.g., "TRAPTI548"
     const referralCode = `${finalUserName.toUpperCase()}${Math.floor(
       100 + Math.random() * 900
     )}`;
 
-    // Find user by ID
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Save username and referral code
     user.username = finalUserName;
     user.referralCode = referralCode;
     await user.save();
@@ -541,7 +434,7 @@ const submitUserName = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error saving username:", error);
+    console.error("Username submission error:", error);
     return res.status(500).json({
       message: "Failed to save username",
       error: error.message,
