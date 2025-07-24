@@ -160,10 +160,12 @@ const deductEntryFee = async (req, res) => {
     console.log("my entry fee amount *********************", amount);
     const userId = req.user.id; // Assumes auth middleware sets this
     const entryFee = parseFloat(amount);
-    if (isNaN(entryFee) || entryFee <= 0) {
+    /*if (isNaN(entryFee) || entryFee <= 0) {
+      return res.status(400).json({ message: "Invalid entry fee amount" });
+    }*/
+    if (isNaN(entryFee)) {
       return res.status(400).json({ message: "Invalid entry fee amount" });
     }
-
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
