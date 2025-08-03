@@ -235,7 +235,7 @@ const getUserDetails = async (req, res) => {
   }
 };
 
-//Ban OR Unoban User
+//Ban OR Unban User
 const banOrUnbanUser = async (req, res) => {
   try {
     const { mobile, action } = req.body;
@@ -310,7 +310,6 @@ const handleWithdrawalRequest = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 // 2. Manual Payout
 const manualPayout = async (req, res) => {
   try {

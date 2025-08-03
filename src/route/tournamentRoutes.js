@@ -20,18 +20,19 @@ router.post(
 );
 router.post("/join", authenticateUser, joinTournament);
 router.post("/start", authenticateUser, startTournament);
-router.post("/end", authenticateAdmin, endTournament);
+// router.post("/end", authenticateAdmin, endTournament);
+router.post("/end", endTournament);
 router.get(
   "/:tournamentId",
   authenticateUser,
-  authenticateAdmin,
+  // authenticateAdmin,
   getTournamentDetails
 );
 router.get(
   "/alltournaments",
   authenticateUser,
-  authenticateAdmin,
-  authorizeRoles("superadmin", "subadmin"),
+  // authenticateAdmin,
+  // authorizeRoles("superadmin", "subadmin"),
   getAllTournaments
 );
 

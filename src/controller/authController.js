@@ -237,7 +237,6 @@ const registerOrLogin = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 // KYC submission logic
 const submitKYC = async (req, res) => {
   try {
@@ -318,6 +317,21 @@ const verifyOtp = async (req, res) => {
         email: user.email,
         username: user.username,
         accountStatus: user.accountStatus,
+        referralCode: user.referralCode,
+        referredBy: user.refferedBy,
+        walletBalance: user.walletBalance,
+        referralBonus: user.referralBonus,
+        winnings: user.winnings,
+        kycStatus: user.kycStatus,
+        status: user.status,
+        registeredOn: user.registeredOn,
+        lastActive: user.lastActive,
+        totalRefferals: user.totalReferrals,
+        totalDeposit: user.totalDeposit,
+        totalWithdraws: user.totalWithdraws,
+        playedMatches: user.playedMatches,
+        wonMatches:user.wonMatches,
+        lostMatches:user.lostMatches,
       },
     });
   } catch (error) {
@@ -441,7 +455,6 @@ const submitUserName = async (req, res) => {
     });
   }
 };
-
 // controllers/userController.js
 const uploadAvatar = async (req, res) => {
   try {
